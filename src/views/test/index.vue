@@ -1,6 +1,6 @@
 <template>
 <div class="block">
-  <span class="demonstration">单选选择任意一级选项</span>
+  <span class="demonstration">单选选择任意一级选项1</span>
   <el-cascader
   ref="mysc"
     :options="options"
