@@ -93,12 +93,51 @@ export const constantRoutes = [
   {
     path: '/test',
     component: Layout,
+    name: 'test',
+    meta: { title: 'test', icon: 'example' },
     children: [
       {
         path: 'index',
         name: 'Test',
         component: () => import('@/views/test/index'),
         meta: { title: 'Test', icon: 'test' }
+      },
+      {
+        path: 'index2',
+        name: 'Test2',
+        component: () => import('@/views/test/index2'),
+        meta: { title: 'Test2', icon: 'test' }
+      }
+    ]
+  },
+
+  {
+    path: '/test33',
+    component: Layout,
+    name: 'test33',
+    meta: { title: 'test33', icon: 'example' },
+    children: [
+      {
+        path: 'index',
+        name: 'Test',
+        component: () => import('@/views/whitepage'),
+        meta: { title: 'Test', icon: 'test' },
+        redirect:'/test33/index/index2',
+        children:[
+          {
+            path: 'index2',
+            name: 'Test2',
+            component: () => import('@/views/test/index2'),
+            meta: { title: 'Test2', icon: 'test' },
+            hidden:true
+          }
+        ]
+      },
+      {
+        path: 'index2',
+        name: 'Test2',
+        component: () => import('@/views/test/index2'),
+        meta: { title: 'Test2', icon: 'test' }
       }
     ]
   },
