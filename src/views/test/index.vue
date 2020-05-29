@@ -1,10 +1,34 @@
 <template>
 <div >
-        <el-table :data="tableData"  row-key="id">
-            <el-table-column v-for="(item, index) in col"   :key="`col_${index}`"   
-           :prop="dropCol[index].prop"    :label="item.label">
-            </el-table-column>
-        </el-table>
+       <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
+  <el-form-item label="活动名称" prop="name">
+    <el-input v-model="ruleForm.name"></el-input>
+  </el-form-item>
+  <el-form-item label="活动区域" prop="region">
+    <el-select v-model="ruleForm.region" placeholder="请选择活动区域">
+      <el-option label="区域一" value="shanghai"></el-option>
+      <el-option label="区域二" value="beijing"></el-option>
+    </el-select>
+  </el-form-item>
+  <el-form-item label="活动时间" required>
+    <el-col :span="11">
+      <el-form-item prop="date1">
+        <el-date-picker type="date" placeholder="选择日期" v-model="ruleForm.date1" style="width: 100%;"></el-date-picker>
+      </el-form-item>
+    </el-col>
+    <el-col class="line" :span="2">-</el-col>
+    <el-col :span="11">
+      <el-form-item prop="date2">
+        <el-time-picker placeholder="选择时间" v-model="ruleForm.date2" style="width: 100%;"></el-time-picker>
+      </el-form-item>
+    </el-col>
+  </el-form-item>
+  <el-form-item>
+    <el-button type="primary" @click="submitForm('ruleForm')">立即创建</el-button>
+    <el-button @click="resetForm('ruleForm')">重置</el-button>
+  </el-form-item>
+  
+</el-form>
     </div>
 
 </template>
@@ -12,76 +36,59 @@
 
 
 <script>
-import Sortable from 'sortablejs';
- 
-    export default {
-        data () {
-            return {
-                col:[{label: '日期',  prop: 'date' },  { label: '姓名',  prop: 'name' }, 
-                                  {label: '地址', prop: 'address'}],
-                dropCol:[{label:'日期',  prop: 'date' },  {label: '姓名', prop: 'name' }, 
-                                   { label: '地址', prop: 'address'}],
-               tableData: [
-                    {
-                        id: '1',
-                        date: '2016-05-02',
-                        name: '王小虎1',
-                        address: '上海市普陀区金沙江路 100 弄'
-                    },
-                    {
-                        id: '2',
-                        date: '2016-05-04',
-                        name: '王小虎2',
-                        address: '上海市普陀区金沙江路 200 弄'
-                    },
-                    {
-                        id: '3',
-                        date: '2016-05-01',
-                        name: '王小虎3',
-                        address: '上海市普陀区金沙江路 300 弄'
-                    },
-                    {
-                        id: '4',
-                        date: '2016-05-03',
-                        name: '王小虎4',
-                        address: '上海市普陀区金沙江路 400 弄'
-                    }
-                ]
-            }
+export default {
+    data() {
+      return {
+        ruleForm: {
+          name: '',
+          region: '',
+          date1: '',
+          date2: '',
+          delivery: false,
+          type: [],
+          resource: '',
+          desc: ''
         },
-        mounted () {
-            this.rowDrop();
-            this.columnDrop();
-        },
-        methods: {
-            // 行拖拽
-            rowDrop () {
-               // 此时找到的元素是要拖拽元素的父容器
-                const tbody = document.querySelector('.el-table__body-wrapper tbody');
-                const _this = this;
-                Sortable.create(tbody, {
-           //  指定父元素下可被拖拽的子元素
-                  draggable: ".el-table__row",
-                   onEnd ({ newIndex, oldIndex }) {
-                        const currRow = _this.tableData.splice(oldIndex, 1)[0];
-                        _this.tableData.splice(newIndex, 0, currRow);
-                    }
-                });
-            },
-            // 列拖拽
-            columnDrop () {
-                const wrapperTr = document.querySelector('.el-table__header-wrapper tr');
-                this.sortable = Sortable.create(wrapperTr, {
-                    animation: 180,
-                    delay: 0,
-                    onEnd: evt => {
-                        const oldItem = this.dropCol[evt.oldIndex];
-                        this.dropCol.splice(evt.oldIndex, 1);
-                        this.dropCol.splice(evt.newIndex, 0, oldItem);
-                    }
-                });
-            }
+        rules: {
+          name: [
+            { required: true, message: '请输入活动名称', trigger: 'blur' },
+            { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+          ],
+          region: [
+            { required: true, message: '请选择活动区域', trigger: 'change' }
+          ],
+          date1: [
+            { type: 'date', required: true, message: '请选择日期', trigger: 'change' }
+          ],
+          date2: [
+            { type: 'date', required: true, message: '请选择时间', trigger: 'change' }
+          ],
+          type: [
+            { type: 'array', required: true, message: '请至少选择一个活动性质', trigger: 'change' }
+          ],
+          resource: [
+            { required: true, message: '请选择活动资源', trigger: 'change' }
+          ],
+          desc: [
+            { required: true, message: '请填写活动形式', trigger: 'blur' }
+          ]
         }
+      };
+    },
+    methods: {
+      submitForm(formName) {
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            alert('submit!');
+          } else {
+            console.log('error submit!!');
+            return false;
+          }
+        });
+      },
+      resetForm(formName) {
+        this.$refs[formName].resetFields();
+      }
     }
-
+  }
 </script>
