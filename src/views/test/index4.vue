@@ -23,6 +23,17 @@
     <el-button @click="resetForm('ruleForm')">重置</el-button>
   </el-form-item>
 </el-form>
+  <el-select v-model="value" placeholder="请选择" @change="handleSelect" multiple>
+    <el-option
+      v-for="item in cities"
+      :key="item.value"
+      :label="item.label"
+      :value="item.value"
+      >
+      <span style="float: left">{{ item.label }}</span>
+      <span style="float: right; color: #8492a6; font-size: 13px;margin-right: 15px">{{ item.value }}</span>
+    </el-option>
+  </el-select>
 </div>
 
 </template>
@@ -51,7 +62,31 @@
             { type: 'array', required: true, message: '请至少选择一个活动性质', trigger: 'change' }
           ]
           
-        }
+        },
+        cities: [{
+          value: 'all',
+          label: '所有选项'
+        },{
+          value: 'Beijing',
+          label: '北京'
+        }, {
+          value: 'Shanghai',
+          label: '上海'
+        }, {
+          value: 'Nanjing',
+          label: '南京'
+        }, {
+          value: 'Chengdu',
+          label: '成都'
+        }, {
+          value: 'Shenzhen',
+          label: '深圳'
+        }, {
+          value: 'Guangzhou',
+          label: '广州'
+        }],
+        value: '',
+        oldOptions:[]
       };
     },
     methods: {
@@ -71,6 +106,39 @@
       },
       handle(){
         console.log("fei",this.ruleForm.region)
+      },
+      handleSelect(val){
+        let allValues = []
+        //保留所有值
+        for (let item of this.cities) {
+            allValues.push(item.value)
+        }
+
+        // 用来储存上一次的值，可以进行对比
+        const oldVal = this.oldOptions
+
+        // 若是全部选择
+        if (!oldVal.includes('all') && val.includes('all')) this.value = allValues
+
+        // 取消全部选中  上次有 当前没有 表示取消全选
+        if (oldVal.includes('all') && !val.includes('all')) this.value = []
+
+        // 点击非全部选中  需要排除全部选中 以及 当前点击的选项 
+        // 新老数据都有全部选中 
+        if (oldVal.includes('all') && val.includes('all')) {
+            const index = val.indexOf('all')
+            val.splice(index, 1) // 排除全选选项
+            this.value = val
+        }
+
+        //全选未选 但是其他选项全部选上 则全选选上 上次和当前 都没有全选
+        if (!oldVal.includes('all') && !val.includes('all')) {
+            console.log(11)
+            if (val.length === allValues.length - 1) this.value = ['all'].concat(val)
+        }
+
+        //储存当前最后的结果 作为下次的老数据 
+        this.oldOptions = this.value
       }
     }
   }

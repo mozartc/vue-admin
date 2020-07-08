@@ -15,6 +15,7 @@
     "svgo": "svgo -f src/icons/svg --config=src/icons/svgo.yml"
   },
   "dependencies": {
+    "@form-create/data": "^1.0.11",
     "@form-create/element-ui": "^1.0.14",
     "axios": "0.18.1",
     "element-ui": "2.13.0",

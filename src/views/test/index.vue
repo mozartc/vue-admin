@@ -2,10 +2,10 @@
 <div >
        <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
   <el-form-item label="活动名称" prop="name">
-    <el-input v-model="ruleForm.name"></el-input>
+    <el-input v-model="ruleForm.name" minlength="10" maxlength="15"></el-input>
   </el-form-item>
   <el-form-item label="活动区域" prop="region">
-    <el-select v-model="ruleForm.region" placeholder="请选择活动区域">
+    <el-select v-model="ruleForm.region" placeholder="请选择活动区域" @change="handleChange">
       <el-option label="区域一" value="shanghai"></el-option>
       <el-option label="区域二" value="beijing"></el-option>
     </el-select>
@@ -38,10 +38,20 @@
 <script>
 export default {
     data() {
+      let checkPrice = (rule,value,callback)=>{
+          if(value){
+            let rgx = /^[A-Za-z]+$/;
+            if(value.match(rgx)==null){
+              return callback(new Error('请输入字母'))
+            }else{
+              callback();
+            }
+          }
+        };
       return {
         ruleForm: {
           name: '',
-          region: '',
+          region: "shanghai",
           date1: '',
           date2: '',
           delivery: false,
@@ -51,8 +61,7 @@ export default {
         },
         rules: {
           name: [
-            { required: true, message: '请输入活动名称', trigger: 'blur' },
-            { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+            {validator:checkPrice,trigger:'blur'}
           ],
           region: [
             { required: true, message: '请选择活动区域', trigger: 'change' }
@@ -88,7 +97,11 @@ export default {
       },
       resetForm(formName) {
         this.$refs[formName].resetFields();
+      },
+      handleChange(val){
+        console.log("jj",val)
       }
+      
     }
   }
 </script>

@@ -16,6 +16,9 @@ import '@/icons' // icon
 import '@/permission' // permission control
 import formCreate, {maker} from '@form-create/element-ui'
 
+import './assets/icon/iconfont.css'
+import './assets/icon/iconfont.js'
+
 /**
  * If you don't want to use mock-server
  * you want to use MockJs for mock api
